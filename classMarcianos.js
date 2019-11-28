@@ -1,11 +1,16 @@
 import {Objeto} from './classObjeto.js';
-class Marcianos extends Objeto{
-    constructor(x,y,velox,veloy,ancho,alto,color){
-        super(x,y,velox,veloy,ancho,alto);
+export class Marciano extends Objeto{
+    constructor(x,y,pox,posy,velox,veloy,ancho,alto,color){
+        super(x,y,pox,posy,velox,veloy,ancho,alto,color);
         this.marciano=document.createElementNS('http://www.w3.org/2000/svg','rect');
         this.marciano.setAttribute('width',x);
         this.marciano.setAttribute('height',y);
+        this.marciano.setAttribute('x',this.posx);
+        this.marciano.setAttribute('y',this.posy);
         this.marciano.setAttribute('fill',color);
+    }
+    getMarciano(){
+        return this.marciano;
     }
     dibujar(){
         this.marciano.setAttribute('width',this.x);
@@ -20,5 +25,10 @@ class Marcianos extends Objeto{
             return false;
         }
     }
-
+    setDirX(valor){
+        this.izqder=valor;
+    }
+    setDirY(valor){
+        this.arrbaj=valor;
+    }
 }
