@@ -38,9 +38,14 @@ export class Juego{
     moverMarcianos(){
         // dir-> true - izquierda, false - derecha
         let cambioDireccion=false;
+        let acabaDeCambiar=false;
         this.marcianitos.forEach(element =>{
             if(element.comprobarMovimientoX(this.dirMarcianos)==false){
                 cambioDireccion=true;
+                acabaDeCambiar=true;
+                this.marcianitos.forEach(element =>{
+                    element.movery(true);
+                });
             }
         });
         if(cambioDireccion){
@@ -50,9 +55,11 @@ export class Juego{
                 this.dirMarcianos=true;
             }
         }
-        this.marcianitos.forEach(element => {
-            cambioDireccion=element.moverx(this.dirMarcianos);
-        });
+        if(acabaDeCambiar==false){
+            this.marcianitos.forEach(element => {
+                cambioDireccion=element.moverx(this.dirMarcianos);
+            });
+        }
         this.marcianitos.forEach(element => {
             element.dibujar();
         });
@@ -70,7 +77,7 @@ export class Juego{
         this.espacioEntreMarcianos=this.ancho*0.05;
         for (let i=0; i<num;i++){
             if(posicionx+tamaño<=this.ancho-this.margen){
-                this.marcianitos.push(new Marciano(tamaño,tamaño,posicionx,posiciony,(tamaño+1),(tamaño+1),this.ancho,this.alto,"red"));
+                this.marcianitos.push(new Marciano(tamaño,tamaño,posicionx,posiciony,(tamaño+1),(tamaño/2),this.ancho,this.alto,"red"));
                 posicionx+=tamaño+this.espacioEntreMarcianos;
             } else {
                 posicionx=0;

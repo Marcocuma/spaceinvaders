@@ -13,13 +13,8 @@ export class Marciano extends Objeto{
         return this.marciano;
     }
     dibujar(){
-<<<<<<< HEAD
         this.marciano.setAttribute('x',this.posx);
         this.marciano.setAttribute('y',this.posy); 
-=======
-        this.marciano.setAttribute('x',this.px);
-        this.marciano.setAttribute('y',this.py); 
->>>>>>> a2ac04f8356eb87096a5ec2a6b6b4b07fb32d604
     }
     dispararAleatorio(){
     //cuando el numero aleatorio es igual a 25 retorna true

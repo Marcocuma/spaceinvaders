@@ -40,7 +40,7 @@ export class Objeto{
         return this.izqder;
     }
     movery(direccion){
-        //direccion= true - derecha  false izquierda
+        //direccion= true - abajo  false arriba
         if(direccion){           
             if(this.posy<this.alto){
                 this.posy+=this.veloy;
