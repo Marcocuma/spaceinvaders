@@ -45,14 +45,10 @@ export class Objeto{
             if(this.posy<this.alto){
                 this.posy+=this.veloy;
                 return false;
-            }else{
-                this.arrbaj=false;
             }
         }else{
-            if(this.posy>this.alto){
+            if(this.posy>0){
                 this.posy-=this.veloy;
-            }else{
-                this.arrbaj=true;
             }
         }
         return this.arrbaj;  
@@ -64,9 +60,15 @@ export class Objeto{
         this.arrbaj=abajo;
     }
     getposicionX(){
-        return this.x;
+        return this.posx;
     }
     getposicionY(){
+        return this.posy;
+    }
+    getAncho(){
+        return this.x;
+    }
+    getAlto(){
         return this.y;
     }
 }

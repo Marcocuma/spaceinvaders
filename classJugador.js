@@ -6,17 +6,18 @@ export class Jugador extends Objeto{
         this.juga.setAttribute('width',this.x);
         this.juga.setAttribute('height',this.y);
         this.juga.setAttribute('fill',color);
-        this.juga.setAttribute('x',this.px);
-        this.juga.setAttribute('y',this.py);
+        this.juga.setAttribute('x',this.posx);
+        this.juga.setAttribute('y',this.posy);
         this.veloBala=3;
     }
     dibujar(){
-        this.juga.setAttribute('x',this.px);
-        this.juga.setAttribute('y',this.py); 
+        this.juga.setAttribute('x',this.posx);
+        this.juga.setAttribute('y',this.posy); 
     }
     disparar(){
         arr= new Array()
     }
-
-
+    getJugador(){
+        return this.juga;
+    }
 }
