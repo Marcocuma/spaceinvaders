@@ -9,35 +9,48 @@ export class Objeto{
         this.posx=posx;
         this.posy=posy;
         this.alto=alto;
-        this.izqder=true;
-        this.arrbaj=true;
     }
-    moverx(){
-        if(this.izqder){           
-            if(this.x<this.ancho){
-                this.x+=this.velox;
+    comprobarMovimientoX(direccion){
+        //direccion= true - derecha  false izquierda
+        if(direccion){
+            if(this.posx+this.x+this.velox<this.ancho-this.x/2){
+                return true;
             }else{
-                this.izqder=false;
+                return false;
             }
         }else{
-            if(this.x>this.ancho){
-                this.x-=this.velox;
+            if(this.posx-this.velox>0+this.x/2){
+                return true;
             }else{
-                this.izqder=true;
+                return false;
+            }
+        }
+    }
+    moverx(direccion){
+        //direccion= true - derecha  false izquierda
+        if(direccion){           
+            if(this.comprobarMovimientoX(direccion)){
+                this.posx+=this.velox;
+            }
+        }else{
+            if(this.comprobarMovimientoX(direccion)){
+                this.posx-=this.velox;
             }
         }
         return this.izqder;
     }
-    movery(){
-        if(this.arrbaj){           
-            if(this.y<this.alto){
-                this.y+=this.veloy;
+    movery(direccion){
+        //direccion= true - derecha  false izquierda
+        if(direccion){           
+            if(this.posy<this.alto){
+                this.posy+=this.veloy;
+                return false;
             }else{
                 this.arrbaj=false;
             }
         }else{
-            if(this.y>this.alto){
-                this.y-=this.veloy;
+            if(this.posy>this.alto){
+                this.posy-=this.veloy;
             }else{
                 this.arrbaj=true;
             }

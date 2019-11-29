@@ -12,11 +12,14 @@ export class Juego{
         this.partida;
         this.jugador;
         this.marcianitos;
+        // dir-> false - izquierda, true - derecha
+        this.dirMarcianos=true;
         this.espacioEntreMarcianos;
         this.balas;
         this.margen;
         document.getElementById(iddiv).appendChild(this.tablero);
         this.reset();
+        this.iniciar();
     }
     reset(){
         //reinicia los objetos y variables del juego.
@@ -24,21 +27,34 @@ export class Juego{
         this.marcianitos=new Array();
         this.balas=new Array();
         this.dir=1;
-        this.colocarMarcianitos(50,40);
+        this.colocarMarcianitos(20,40);
     }
     iniciar(){
         //Comienza el bucle del juego
         this.partida=setInterval(()=>{
-
+            this.moverMarcianos();
         },1000);
     }
     moverMarcianos(){
-        // dir-> 0 - izquierda, 1 - derecha
+        // dir-> true - izquierda, false - derecha
+        let cambioDireccion=false;
+        this.marcianitos.forEach(element =>{
+            if(element.comprobarMovimientoX(this.dirMarcianos)==false){
+                cambioDireccion=true;
+            }
+        });
+        if(cambioDireccion){
+            if(this.dirMarcianos==true){
+                this.dirMarcianos=false;
+            } else {
+                this.dirMarcianos=true;
+            }
+        }
         this.marcianitos.forEach(element => {
-            var dir;
-            dir=element.moverx();
-            if(dir==true)
-                element.moverx();
+            cambioDireccion=element.moverx(this.dirMarcianos);
+        });
+        this.marcianitos.forEach(element => {
+            element.dibujar();
         });
     }
     parar(){
@@ -50,7 +66,7 @@ export class Juego{
         let contador=0;
         let posicionx=0;
         let posiciony=0
-        this.margen=tamaño+2
+        this.margen=tamaño+(this.ancho*0.1);
         this.espacioEntreMarcianos=this.ancho*0.05;
         for (let i=0; i<num;i++){
             if(posicionx+tamaño<=this.ancho-this.margen){

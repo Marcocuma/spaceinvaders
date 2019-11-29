@@ -13,8 +13,8 @@ export class Marciano extends Objeto{
         return this.marciano;
     }
     dibujar(){
-        this.marciano.setAttribute('width',this.x);
-        this.marciano.setAttribute('height',this.y); 
+        this.marciano.setAttribute('x',this.posx);
+        this.marciano.setAttribute('y',this.posy); 
     }
     dispararAleatorio(){
     //cuando el numero aleatorio
