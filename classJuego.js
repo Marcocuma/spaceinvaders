@@ -50,8 +50,8 @@ export class Juego{
         } else if(codigo==39){
             this.jugador.moverx(true);
         } else if(codigo==38&&this.contadorDisparo==0){
-            this.crearBala(this.jugador.getposicionX()+(this.jugador.getAncho()/2),this.jugador.getposicionY(),this.ancho*0.01,"purple");
-            this.contadorDisparo=10;
+            this.crearBala(this.jugador.getposicionX()+(this.jugador.getAncho()/2),this.jugador.getposicionY(),this.ancho*0.03,"purple");
+            this.contadorDisparo=5;
         }
     }
     compruebaColision(){
@@ -68,8 +68,8 @@ export class Juego{
                     }
                 } else if(bala.getposicionY()<=0){
                     let indiceBala=this.balas.indexOf(bala);
-                    this.balas.splice(indiceBala,1);
                     this.destruir(bala.getBala());
+                    this.balas.splice(indiceBala,1);
                 }
             });
         });
@@ -128,14 +128,13 @@ export class Juego{
     }
     colocarMarcianitos(tamaño,num){
         //le pasas el tamaño del marciano (lo hace cuadrado) y el numero de marcianos que vas a crear
-        let contador=0;
         let posicionx=0;
         let posiciony=0
         this.margen=tamaño+(this.ancho*0.1);
         this.espacioEntreMarcianos=this.ancho*0.05;
         for (let i=0; i<num;i++){
             if(posicionx+tamaño<=this.ancho-this.margen){
-                this.marcianitos.push(new Marciano(tamaño,tamaño,posicionx,posiciony,(this.ancho*0.005),(this.alto*0.005),this.ancho,this.alto,"red"));
+                this.marcianitos.push(new Marciano(tamaño,tamaño,posicionx,posiciony,(this.ancho*0.002),(this.alto*0.005),this.ancho,this.alto,"red"));
                 posicionx+=tamaño+this.espacioEntreMarcianos;
             } else {
                 posicionx=0;
@@ -155,7 +154,7 @@ export class Juego{
         this.tablero.removeChild(elemento);
     }
     crearBala(posx,posy,vel,color){
-        var bala=new Bala(this.ancho*0.002,(this.alto*0.05),posx,posy-this.alto*0.05,vel,this.ancho,this.alto,color);
+        var bala=new Bala(this.ancho*0.002,(this.alto*0.02),posx,posy-this.alto*0.05,vel,this.ancho,this.alto,color);
         this.balas.unshift(bala);
         this.anadirElemento(bala.getBala());
     }
