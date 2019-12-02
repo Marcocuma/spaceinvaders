@@ -40,6 +40,7 @@ export class Juego{
                 this.contadorDisparo--;
             }
             this.moverMarcianosYBalas();
+            this.compruebaColision();
             this.dibujar();
         },100);
     }
@@ -52,6 +53,34 @@ export class Juego{
             this.crearBala(this.jugador.getposicionX()+(this.jugador.getAncho()/2),this.jugador.getposicionY(),this.ancho*0.01,"purple");
             this.contadorDisparo=10;
         }
+    }
+    compruebaColision(){
+        this.balas.forEach(bala => {
+            this.marcianitos.forEach(marciano => {
+                if(this.comprobarPosicion(bala,marciano)){
+                    this.destruir(bala.getBala());
+                    this.destruir(marciano.getMarciano());
+                    let indiceBala=this.balas.indexOf(bala);
+                    let indiceMarciano=this.marcianitos.indexOf(marciano);
+                    if(indiceBala!=-1&&indiceMarciano!=-1){
+                        this.balas.splice(indiceBala,1);
+                        this.marcianitos.splice(indiceMarciano,1);
+                    }
+                } else if(bala.getposicionY()<=0){
+                    let indiceBala=this.balas.indexOf(bala);
+                    this.balas.splice(indiceBala,1);
+                    this.destruir(bala.getBala());
+                }
+            });
+        });
+    }
+    comprobarPosicion(bala,marciano){
+        if(bala.getposicionY()>=marciano.getposicionY()&&bala.getposicionY()<=marciano.getposicionY()+marciano.getAlto()){
+            if(bala.getposicionX()>=marciano.getposicionX()&&bala.getposicionX()<=marciano.getposicionX()+marciano.getAncho()){
+                return true;
+            }
+        }
+        return false;
     }
     moverMarcianosYBalas(){
         // dir-> true - izquierda, false - derecha
