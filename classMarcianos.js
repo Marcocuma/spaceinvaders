@@ -18,7 +18,7 @@ export class Marciano extends Objeto{
     }
     dispararAleatorio(){
     //cuando el numero aleatorio es igual a 25 retorna true
-        let num=Math.random()*(50 - 1);
+        let num=Math.trunc(Math.random()*(200 - 1));
         if(num==25){
             return true;
         }else{

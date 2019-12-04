@@ -3,12 +3,31 @@ import {Marciano} from './classMarcianos.js';
 import {Bala} from './classBalas.js';
 export class Juego{
     constructor(alto, ancho, iddiv){
-        this.tablero=document.createElementNS("http://www.w3.org/2000/svg","svg");
-        this.tablero.setAttribute("height",alto);
-        this.tablero.setAttribute("width",ancho);
-        this.contadorDisparo;
+        
         this.alto=alto;
         this.ancho=ancho;
+        this.div=document.getElementById(iddiv);
+        this.reset();
+        this.iniciar();
+    }
+    reiniciar(){
+        this.borrarTablero();
+        this.reset();
+        this.iniciar();
+    }
+    borrarTablero(){
+        this.div.removeChild(this.tablero);
+        this.div.removeChild(this.boton);
+    }
+    reset(){
+        //reinicia los objetos y variables del juego.
+        this.tablero=document.createElementNS("http://www.w3.org/2000/svg","svg");
+        this.tablero.setAttribute("height",this.alto);
+        this.tablero.setAttribute("width",this.ancho);
+        this.tablero.id="tablero";
+        this.boton=document.createElement("p");
+        this.boton.innerText="Reiniciar";
+        this.contadorDisparo;
         this.partida;
         this.jugador;
         this.marcianitos;
@@ -16,20 +35,19 @@ export class Juego{
         this.dirMarcianos=true;
         this.espacioEntreMarcianos;
         this.balas;
+        this.balasMarcianos;
         this.margen;
-        document.getElementById(iddiv).addEventListener("keydown",(e)=>this.pulsacionTecla(e.keyCode));
-        document.getElementById(iddiv).appendChild(this.tablero);
-        document.getElementById(iddiv).setAttribute("tabIndex",0);
-        this.reset();
-        this.iniciar();
-    }
-    reset(){
-        //reinicia los objetos y variables del juego.
+        this.boton.addEventListener("click",()=>this.reiniciar());
+        this.div.addEventListener("keydown",(e)=>this.pulsacionTecla(e.keyCode));
+        this.div.appendChild(this.tablero);
+        this.div.setAttribute("tabIndex",0);
+        this.div.appendChild(this.boton);
         this.jugador=new Jugador(40,10,this.ancho/2,this.alto-12,40+1,0,this.ancho,this.alto,"blue");
         this.anadirElemento(this.jugador.getJugador());
         this.contadorDisparo=0;
         this.marcianitos=new Array();
         this.balas=new Array();
+        this.balasMarcianos=new Array();
         this.dir=1;
         this.colocarMarcianitos(20,40);
     }
@@ -39,10 +57,21 @@ export class Juego{
             if(this.contadorDisparo>0){
                 this.contadorDisparo--;
             }
+            this.dispararBalaMarciano();
             this.moverMarcianosYBalas();
             this.compruebaColision();
             this.dibujar();
-        },100);
+        },50);
+    }
+    parar(){
+        clearInterval(this.partida);
+    }
+    dispararBalaMarciano(){
+        this.marcianitos.forEach((e)=>{ 
+            if(e.dispararAleatorio()){
+                this.crearBalaMarcianos(e.getposicionX()+(e.getAncho()/2),e.getposicionY()+(e.getAlto()*2),this.ancho*0.005,"black");
+            }
+        })
     }
     pulsacionTecla(codigo){
         if(codigo==37){
@@ -50,7 +79,7 @@ export class Juego{
         } else if(codigo==39){
             this.jugador.moverx(true);
         } else if(codigo==38&&this.contadorDisparo==0){
-            this.crearBala(this.jugador.getposicionX()+(this.jugador.getAncho()/2),this.jugador.getposicionY(),this.ancho*0.03,"purple");
+            this.crearBala(this.jugador.getposicionX()+(this.jugador.getAncho()/2),this.jugador.getposicionY(),this.ancho*0.01,"green");
             this.contadorDisparo=5;
         }
     }
@@ -73,6 +102,15 @@ export class Juego{
                 }
             });
         });
+        this.balasMarcianos.forEach(bala =>{
+            if(this.comprobarPosicion(bala,this.jugador)){
+                this.parar();
+            }else if(bala.getposicionY()>=this.alto){
+                let indiceBala=this.balasMarcianos.indexOf(bala);
+                this.destruir(bala.getBala());
+                this.balasMarcianos.splice(indiceBala,1);
+            }
+        })
     }
     comprobarPosicion(bala,marciano){
         if(bala.getposicionY()>=marciano.getposicionY()&&bala.getposicionY()<=marciano.getposicionY()+marciano.getAlto()){
@@ -81,7 +119,7 @@ export class Juego{
             }
         }
         return false;
-    }
+    }   
     moverMarcianosYBalas(){
         // dir-> true - izquierda, false - derecha
         let cambioDireccion=false;
@@ -106,11 +144,16 @@ export class Juego{
             this.marcianitos.forEach(element => {
                 cambioDireccion=element.moverx(this.dirMarcianos);
             });
-            if(this.balas.length>0){
-                this.balas.forEach(element => {
-                    element.movery(false);
-                });
-            }
+        }
+        if(this.balas.length>0){
+            this.balas.forEach(element => {
+                element.movery(false);
+            });
+        }
+        if(this.balasMarcianos.length>0){
+            this.balasMarcianos.forEach(element => {
+                element.movery(true);
+            });
         }
     }
     dibujar(){
@@ -121,6 +164,9 @@ export class Juego{
             element.dibujar();
         });
         this.jugador.dibujar();
+        this.balasMarcianos.forEach(element => {
+            element.dibujar();
+        });
     }
     parar(){
         //Para el bucle del juego
@@ -134,7 +180,7 @@ export class Juego{
         this.espacioEntreMarcianos=this.ancho*0.05;
         for (let i=0; i<num;i++){
             if(posicionx+tamaño<=this.ancho-this.margen){
-                this.marcianitos.push(new Marciano(tamaño,tamaño,posicionx,posiciony,(this.ancho*0.002),(this.alto*0.005),this.ancho,this.alto,"red"));
+                this.marcianitos.push(new Marciano(tamaño,tamaño,posicionx,posiciony,(this.ancho*0.001),(this.alto*0.005),this.ancho,this.alto,"red"));
                 posicionx+=tamaño+this.espacioEntreMarcianos;
             } else {
                 posicionx=0;
@@ -156,6 +202,11 @@ export class Juego{
     crearBala(posx,posy,vel,color){
         var bala=new Bala(this.ancho*0.002,(this.alto*0.02),posx,posy-this.alto*0.05,vel,this.ancho,this.alto,color);
         this.balas.unshift(bala);
+        this.anadirElemento(bala.getBala());
+    }
+    crearBalaMarcianos(posx,posy,vel,color){
+        var bala=new Bala(this.ancho*0.002,(this.alto*0.02),posx,posy-this.alto*0.05,vel,this.ancho,this.alto,color);
+        this.balasMarcianos.unshift(bala);
         this.anadirElemento(bala.getBala());
     }
 }
