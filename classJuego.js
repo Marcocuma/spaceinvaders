@@ -16,16 +16,22 @@ export class Juego{
         this.iniciar();
     }
     borrarTablero(){
-        this.div.removeChild(this.tablero);
-        this.div.removeChild(this.boton);
+        this.fondo.removeChild(this.tablero);
+        this.fondo.removeChild(this.boton);
     }
     reset(){
         //reinicia los objetos y variables del juego.
+        this.fondo=document.createElement("div")
+        this.fondo.setAttribute("height",this.alto);
+        this.fondo.setAttribute("width",this.ancho);
+        this.fondo.style.background="url('./img/fondo.gif')no-repeat fixed";
+        this.fondo.style.backgroundSize="cover"
         this.tablero=document.createElementNS("http://www.w3.org/2000/svg","svg");
         this.tablero.setAttribute("height",this.alto);
         this.tablero.setAttribute("width",this.ancho);
         this.tablero.id="tablero";
         this.boton=document.createElement("p");
+        this.boton.id="boton";
         this.boton.innerText="Reiniciar";
         this.contadorDisparo;
         this.partida;
@@ -39,17 +45,18 @@ export class Juego{
         this.margen;
         this.boton.addEventListener("click",()=>this.reiniciar());
         this.div.addEventListener("keydown",(e)=>this.pulsacionTecla(e.keyCode));
-        this.div.appendChild(this.tablero);
+        this.div.appendChild(this.fondo);
+        this.fondo.appendChild(this.tablero);
         this.div.setAttribute("tabIndex",0);
-        this.div.appendChild(this.boton);
-        this.jugador=new Jugador(40,10,this.ancho/2,this.alto-12,40+1,0,this.ancho,this.alto,"blue");
+        this.fondo.appendChild(this.boton);
+        this.jugador=new Jugador(60,60,this.ancho/2,this.alto-100,5+1,0,this.ancho,this.alto,"blue");
         this.anadirElemento(this.jugador.getJugador());
         this.contadorDisparo=0;
         this.marcianitos=new Array();
         this.balas=new Array();
         this.balasMarcianos=new Array();
         this.dir=1;
-        this.colocarMarcianitos(20,40);
+        this.colocarMarcianitos(60,40);
     }
     iniciar(){
         //Comienza el bucle del juego
@@ -69,7 +76,7 @@ export class Juego{
     dispararBalaMarciano(){
         this.marcianitos.forEach((e)=>{ 
             if(e.dispararAleatorio()){
-                this.crearBalaMarcianos(e.getposicionX()+(e.getAncho()/2),e.getposicionY()+(e.getAlto()*2),this.ancho*0.005,"black");
+                this.crearBalaMarcianos(e.getposicionX()+(e.getAncho()/2),e.getposicionY()+(e.getAlto()*2),this.ancho*0.005,"white");
             }
         })
     }
@@ -79,7 +86,7 @@ export class Juego{
         } else if(codigo==39){
             this.jugador.moverx(true);
         } else if(codigo==38&&this.contadorDisparo==0){
-            this.crearBala(this.jugador.getposicionX()+(this.jugador.getAncho()/2),this.jugador.getposicionY(),this.ancho*0.01,"green");
+            this.crearBala(this.jugador.getposicionX()+(this.jugador.getAncho()/2),this.jugador.getposicionY(),this.ancho*0.01,"#5AFFF3 ");
             this.contadorDisparo=5;
         }
     }
@@ -177,7 +184,7 @@ export class Juego{
         let posicionx=0;
         let posiciony=0
         this.margen=tamaño+(this.ancho*0.1);
-        this.espacioEntreMarcianos=this.ancho*0.05;
+        this.espacioEntreMarcianos=this.ancho*0.005;
         for (let i=0; i<num;i++){
             if(posicionx+tamaño<=this.ancho-this.margen){
                 this.marcianitos.push(new Marciano(tamaño,tamaño,posicionx,posiciony,(this.ancho*0.001),(this.alto*0.005),this.ancho,this.alto,"red"));
