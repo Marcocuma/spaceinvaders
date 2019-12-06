@@ -3,7 +3,7 @@ import {Marciano} from './classMarcianos.js';
 import {Bala} from './classBalas.js';
 export class Juego{
     constructor(alto, ancho, iddiv){
-        
+
         this.alto=alto;
         this.ancho=ancho;
         this.div=document.getElementById(iddiv);
@@ -21,7 +21,8 @@ export class Juego{
     }
     reset(){
         //reinicia los objetos y variables del juego.
-        this.fondo=document.createElement("div")
+        this.fondo=document.createElement("div");
+        this.parrafoG=document.createElement("p");
         this.fondo.setAttribute("height",this.alto);
         this.fondo.setAttribute("width",this.ancho);
         this.fondo.style.background="url('./img/fondo.gif')no-repeat fixed";
@@ -58,13 +59,25 @@ export class Juego{
         this.dir=1;
         this.colocarMarcianitos(60,40);
     }
+    ganar(){
+        if(this.marcianitos.length==0){
+            this.parar();
+            thisparrafoG.appendChild(this.fondo);
+            this.parrafoG.style.textAlign='center';
+            this.parrafoG.style.zIndex='100';
+            
+        }
+    }
+
     iniciar(){
         //Comienza el bucle del juego
         this.partida=setInterval(()=>{
             if(this.contadorDisparo>0){
                 this.contadorDisparo--;
             }
-            this.dispararBalaMarciano();
+            this.ganar();
+            this.perder();
+          //  this.dispararBalaMarciano();
             this.moverMarcianosYBalas();
             this.compruebaColision();
             this.dibujar();
@@ -89,6 +102,13 @@ export class Juego{
             this.crearBala(this.jugador.getposicionX()+(this.jugador.getAncho()/2),this.jugador.getposicionY(),this.ancho*0.01,"#5AFFF3 ");
             this.contadorDisparo=5;
         }
+    }
+    perder(){
+        this.marcianitos.forEach(marciano =>{
+            if(this.jugador.getposicionY()>=marciano.getposicionY()&&this.jugador.getposicionY()<=marciano.getposicionY()+marciano.getAlto()){
+                this.parar();
+            }
+        })
     }
     compruebaColision(){
         this.balas.forEach(bala => {
